@@ -13,9 +13,9 @@
 
 
 #include "nxd_bsd.h"
+#include <string.h>
 
-
-typedef INT ssize_t;
+/* typedef INT ssize_t; */
 
 #define OPTVAL_TYPE int
 #ifdef UA_sleep_ms
@@ -23,6 +23,8 @@ void UA_sleep_ms(unsigned long ms);
 #else
 # define UA_sleep_ms(X) tx_thread_sleep((X) * NX_IP_PERIODIC_RATE / 1000)
 #endif
+
+#define UA_access(x,y) 0
 
 #define UA_IPV6 0
 #define UA_SOCKET INT
@@ -47,25 +49,25 @@ void UA_sleep_ms(unsigned long ms);
 #define UA_poll nx_bsd_poll
 #define UA_send(sockfd, buf, len, flags) nx_bsd_send(sockfd, buf, (INT)(len), flags)
 #define UA_recv(sockfd, buf, len, flags) nx_bsd_recv(sockfd, buf, (INT)(len), flags)
-#define UA_sendto(sockfd, buf, len, flags, dest_addr, addrlen) nx_bsd_sendto(sockfd, (const char*)(buf), (int)(len), flags, dest_addr, (int) (addrlen))
+#define UA_sendto(sockfd, buf, len, flags, dest_addr, addrlen) nx_bsd_sendto(sockfd, (char*)(buf), (int)(len), flags, dest_addr, (int) (addrlen))
 #define UA_recvfrom(sockfd, buf, len, flags, src_addr, addrlen) nx_bsd_recvfrom(sockfd, (char*)(buf), (int)(len), flags, src_addr, addrlen)
 #define UA_recvmsg
 #define UA_htonl htonl
 #define UA_ntohl ntohl
 #define UA_close nx_bsd_soc_close
 #define UA_select(nfds, readfds, writefds, exceptfds, timeout) nx_bsd_select((INT)(nfds), readfds, writefds, exceptfds, timeout)
-#define UA_shutdown
+#define UA_shutdown(a, b)
 #define UA_socket nx_bsd_socket
-#define UA_bind nx_bsd_bind
+#define UA_bind(sock, addr, len) nx_bsd_bind(sock, addr, (INT)(len))
 #define UA_listen(sockID, backlog) nx_bsd_listen(sockID, 5)
-#define UA_accept nx_bsd_accept
+#define UA_accept(sock, addr, len) nx_bsd_accept(sock, addr, (INT *)(len))
 #define UA_connect(sockfd, addr, addrlen) nx_bsd_connect(sockfd, addr, (INT)(addrlen))
 #define UA_getaddrinfo nx_bsd_getaddrinfo
-#define UA_getsockopt nx_bsd_getsockopt
+#define UA_getsockopt(sock, level, name, val, len) nx_bsd_getsockopt(sock, level, name, val, (INT *)(len))
 #define UA_setsockopt nx_bsd_setsockopt
 #define UA_ioctl nx_bsd_ioctl
 #define UA_freeaddrinfo nx_bsd_freeaddrinfo
-#define UA_getsockname nx_bsd_getsockname
+#define UA_getsockname(sock, addr, len) nx_bsd_getsockname(sock, addr, (INT *)(len))
 #define UA_inet_pton nx_bsd_inet_pton
 
 #if UA_IPV6
@@ -82,7 +84,7 @@ void UA_sleep_ms(unsigned long ms);
 
 
 #define UA_snprintf snprintf
-#define UA_strncasecmp _strnicmp
+#define UA_strncasecmp strncmp
 
 #define UA_LOG_SOCKET_ERRNO_WRAP(LOG) { \
     char *errno_str = ""; \
@@ -132,6 +134,29 @@ UA_LOCK_ASSERT(UA_Lock *lock, int num) {
 #define UA_UNLOCK(lock)
 #define UA_LOCK_ASSERT(lock, num)
 #endif
+
+
+#ifdef NX_BSD_ENABLE_NATIVE_API
+
+#define errno nx_bsd_errno
+#define timeval nx_bsd_timeval
+#define pollfd nx_bsd_pollfd
+#define fd_set nx_bsd_fd_set
+#define sockaddr nx_bsd_sockaddr
+#define sockaddr_storage nx_bsd_sockaddr_storage
+#define socklen_t nx_bsd_socklen_t
+#define sockaddr_in nx_bsd_sockaddr_in
+#define addrinfo nx_bsd_addrinfo
+
+#define in_addr nx_bsd_in_addr
+#define ip_mreq nx_bsd_ip_mreq
+#define in6_addr nx_bsd_in6_addr
+
+#undef FD_ZERO
+#define FD_ZERO NX_BSD_FD_ZERO
+
+#endif
+
 
 #include <open62541/architecture_functions.h>
 

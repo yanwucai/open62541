@@ -5,6 +5,12 @@
 
 #ifdef UA_ARCHITECTURE_AZURERTOS
 
+
+#ifndef _DEFAULT_SOURCE
+# define _DEFAULT_SOURCE
+#endif
+/* On older systems we need to define _BSD_SOURCE.
+ * _DEFAULT_SOURCE is an alias for that. */
 #ifndef _BSD_SOURCE
 # define _BSD_SOURCE
 #endif
