@@ -37,9 +37,11 @@ void UA_deinitialize_architecture_network(void){
   
 }
 
-#define HOSTNAME "AzureRTOS"
+#ifndef NX_HOSTNAME
+#define NX_HOSTNAME "localhost"
+#endif
 int UA_gethostname(char *name, size_t len) {
-    memcpy(name, HOSTNAME, sizeof(HOSTNAME));
+    strncpy(name, NX_HOSTNAME, len);
     return NX_SOC_OK;
 }
 

@@ -84,7 +84,7 @@ void UA_sleep_ms(unsigned long ms);
 
 
 #define UA_snprintf snprintf
-#define UA_strncasecmp strncmp
+#define UA_strncasecmp strncasecmp
 
 #define UA_LOG_SOCKET_ERRNO_WRAP(LOG) { \
     char *errno_str = ""; \
