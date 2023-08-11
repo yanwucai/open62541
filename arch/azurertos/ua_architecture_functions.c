@@ -37,12 +37,15 @@ void UA_deinitialize_architecture_network(void){
   
 }
 
+#ifndef UA_gethostname
 #ifndef NX_HOSTNAME
 #define NX_HOSTNAME "localhost"
 #endif
+
 int UA_gethostname(char *name, size_t len) {
     strncpy(name, NX_HOSTNAME, len);
     return NX_SOC_OK;
 }
+#endif
 
 #endif /* UA_ARCHITECTURE_AZURERTOS */
