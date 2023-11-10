@@ -451,7 +451,7 @@ UA_PubSubChannelEthernetXDP_send(UA_PubSubChannelDataEthernet *channelDataEthern
 
     rc = UA_sendto(xsk_socket__fd(xdp_socket->xskfd), NULL, 0, MSG_DONTWAIT, NULL, 0);
     if (rc >= 0 || errno == ENOBUFS || errno == EAGAIN || errno == EBUSY) {
-        UA_UInt32 rcvd = xsk_ring_cons__peek(&xdp_socket->umem->cq, 1, &idx);
+        UA_UInt32 rcvd = (UA_UInt32)xsk_ring_cons__peek(&xdp_socket->umem->cq, 1, &idx);
         if (rcvd > 0) {
             xsk_ring_cons__release(&xdp_socket->umem->cq, rcvd);
             xdp_socket->outstanding_tx -= rcvd;
@@ -482,7 +482,7 @@ UA_PubSubChannelEthernetXDP_receive(UA_PubSubChannelDataEthernet *channelDataEth
     xdp_socket = channelDataEthernet->xdpsocket;
     message->length = 0;
 
-    rcvd = xsk_ring_cons__peek(&xdp_socket->rx_ring, BATCH_SIZE, &xdp_socket->idx_rx);
+    rcvd = (UA_UInt32)xsk_ring_cons__peek(&xdp_socket->rx_ring, BATCH_SIZE, &xdp_socket->idx_rx);
     if (!rcvd)
         return UA_STATUSCODE_GOODNODATA; //No packets even after select/poll
 

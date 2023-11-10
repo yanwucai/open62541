@@ -51,7 +51,7 @@ void UA_sleep_ms(unsigned long ms);
 #define UA_recv(sockfd, buf, len, flags) nx_bsd_recv(sockfd, buf, (INT)(len), flags)
 #define UA_sendto(sockfd, buf, len, flags, dest_addr, addrlen) nx_bsd_sendto(sockfd, (char*)(buf), (int)(len), flags, dest_addr, (int) (addrlen))
 #define UA_recvfrom(sockfd, buf, len, flags, src_addr, addrlen) nx_bsd_recvfrom(sockfd, (char*)(buf), (int)(len), flags, src_addr, addrlen)
-#define UA_recvmsg
+#define UA_recvmsg nx_bsd_recvmsg
 #define UA_htonl htonl
 #define UA_ntohl ntohl
 #define UA_close nx_bsd_soc_close
@@ -65,7 +65,7 @@ void UA_sleep_ms(unsigned long ms);
 #define UA_getaddrinfo nx_bsd_getaddrinfo
 #define UA_getsockopt(sock, level, name, val, len) nx_bsd_getsockopt(sock, level, name, val, (INT *)(len))
 #define UA_setsockopt nx_bsd_setsockopt
-#define UA_ioctl nx_bsd_ioctl
+#define UA_ioctl(sock, cmd, res) nx_bsd_ioctl(sock, cmd, (INT *)(res))
 #define UA_freeaddrinfo nx_bsd_freeaddrinfo
 #define UA_getsockname(sock, addr, len) nx_bsd_getsockname(sock, addr, (INT *)(len))
 #define UA_inet_pton nx_bsd_inet_pton
@@ -147,10 +147,16 @@ UA_LOCK_ASSERT(UA_Lock *lock, int num) {
 #define socklen_t nx_bsd_socklen_t
 #define sockaddr_in nx_bsd_sockaddr_in
 #define addrinfo nx_bsd_addrinfo
+#define sockaddr_ll nx_bsd_sockaddr_ll
 
 #define in_addr nx_bsd_in_addr
 #define ip_mreq nx_bsd_ip_mreq
 #define in6_addr nx_bsd_in6_addr
+#define packet_mreq nx_bsd_packet_mreq
+#define ether_header nx_bsd_ether_header
+#define iovec nx_bsd_iovec
+#define msghdr nx_bsd_msghdr
+#define ifreq nx_bsd_ifreq
 
 #undef FD_ZERO
 #define FD_ZERO NX_BSD_FD_ZERO
